@@ -50,18 +50,22 @@
 - [x] Add a Vercel source configuration that builds the Vite frontend and proxies API traffic without exposing server secrets.
 - [x] Deploy the current GitHub main revision to Vercel and verify the public URL.
 - [x] Create the Vercel Git project and verify its resolved build and runtime configuration.
-- [ ] Add the Vercel hostname to reCAPTCHA, then verify the checkbox on the external booking page.
-- [ ] Replace the redirected Vercel alias in canonical and crawler configuration with the actual production hostname `shireeshavision.vercel.app`.
+- [x] Add the Vercel hostname to reCAPTCHA, then verify the checkbox on the external booking page.
+- [x] Replace the redirected Vercel alias in canonical and crawler configuration with the actual production hostname `shireeshavision.vercel.app`.
 - [x] Add and verify the Vercel single-page-app fallback required for the public booking route.
 - [x] Audit the deployed Vercel site for indexability, routes, metadata, crawler directives, accessibility semantics, and mobile issues.
 - [x] Add factual page metadata, canonical URLs, social metadata, robots directives, favicon metadata, and crawlers’ public endpoints.
 - [x] Add an accurate public sitemap, robots.txt policy, and fact-based JSON-LD without inventing business details.
 - [x] Improve safe performance and crawlable-page concerns without changing the site’s visual design.
-- [ ] Mount and verify route-aware metadata, canonical URLs, robots directives, social tags, and JSON-LD on public and admin routes.
-- [ ] Re-verify the deployed robots.txt, sitemap.xml, and Google Search Console verification meta tag after the Vercel update.
-- [ ] Complete a mobile Vercel audit and verify the intended image-loading and crawlability improvements.
-- [ ] Build and verify Vercel pages, sitemap, robots, canonical metadata, structured data, mobile layout, and public booking functionality.
-- [ ] Add the supplied Google Search Console HTML verification tag to the home-page document head and verify it after Vercel deployment.
+- [x] Mount and verify route-aware metadata, canonical URLs, robots directives, social tags, and JSON-LD on public and admin routes.
+- [x] Re-verify the deployed robots.txt, sitemap.xml, and Google Search Console verification meta tag after the Vercel update.
+- [x] Complete a mobile Vercel audit and verify the intended image-loading and crawlability improvements.
+- [x] Build and verify Vercel pages, sitemap, robots, canonical metadata, structured data, mobile layout, and public booking functionality.
+- [x] Add the supplied Google Search Console HTML verification tag to the home-page document head and verify it after Vercel deployment.
+- [x] Record direct browser evidence that the Google reCAPTCHA checkbox renders on the canonical Vercel booking host.
+- [x] Validate the canonical-Vercel booking flow with a solved reCAPTCHA through successful appointment confirmation (user completed the final action during testing).
+- [x] Submit the canonical Vercel sitemap to the verified Google Search Console property.
+- [x] Request Google indexing for the canonical Vercel homepage and record the outcome.
 - [x] Diagnose why a completed reCAPTCHA challenge returns “Booking could not be confirmed.”
 - [x] Correct the preview-only CAPTCHA rejection in the booking confirmation verifier and add regression coverage.
 - [x] Verify that a completed real reCAPTCHA challenge advances from Details to Review without submitting an appointment.
