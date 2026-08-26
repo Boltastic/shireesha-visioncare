@@ -23,6 +23,10 @@ Google verified that the booking screen can load the configured widget, but its 
 
 After Google applies the hostname change, reload the booking page and advance to **Your details**. The checkbox should appear in place of the error card. Add any future custom production domain to this same Google allowlist before switching public traffic to it.
 
+## External Vercel deployment
+
+The Vercel configuration publishes the Vite frontend and proxies its `/api/*` requests to the existing live Manus backend. This preserves the database, appointment safeguards, secure staff session, and server-only secrets without copying them to another host. Add the Vercel deployment hostname to the Google reCAPTCHA key's allowed-domain list before testing the booking checkbox on that external URL.
+
 ## Before launch
 
 Add approved contact information, address, opening hours, service names, and service descriptions. The dashboard is available only through the configured administrator email and password; no public role assignment is required. Connect a verified Google Calendar integration before relying on calendar event creation. The current build intentionally contains no email collection, WhatsApp automation, testimonials, medical claims, patient reviews, or invented provider credentials.

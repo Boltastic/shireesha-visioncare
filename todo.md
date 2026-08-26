@@ -46,9 +46,11 @@
 - [x] Add the preview and production hostnames to the new reCAPTCHA key's allowed-domain list, then verify a working checkbox.
 - [x] Confirm the published checkpoint version is recorded after GitHub synchronization: `35f2a291`.
 - [x] Verify that the published project revision is present on the connected GitHub main branch.
-- [ ] Assess the Vercel workspace and configuration required for an external deployment.
-- [ ] Configure the Vercel build, runtime, and required environment variables without exposing secrets.
+- [x] Assess the Vercel workspace and configuration required for an external deployment.
+- [x] Add a Vercel source configuration that builds the Vite frontend and proxies API traffic without exposing server secrets.
 - [ ] Deploy the current GitHub main revision to Vercel and verify the public URL.
+- [ ] Create the Vercel Git project and verify its resolved build and runtime configuration.
+- [ ] Add the Vercel hostname to reCAPTCHA and verify the externally deployed API proxy works.
 - [x] Diagnose why a completed reCAPTCHA challenge returns “Booking could not be confirmed.”
 - [x] Correct the preview-only CAPTCHA rejection in the booking confirmation verifier and add regression coverage.
 - [x] Verify that a completed real reCAPTCHA challenge advances from Details to Review without submitting an appointment.
