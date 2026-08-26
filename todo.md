@@ -17,3 +17,5 @@
 - [x] Save a completed project checkpoint after documenting production SMS, CAPTCHA, and calendar setup.
 - [x] Verify the user-applied white booking-button label and icon contrast change across the booking screen.
 - [x] Save a refreshed checkpoint for the verified booking-button visual edit.
+- [x] Confirm the visual-editor comment is already satisfied by the retained white booking-button text and icon styles.
+- [x] Save a new checkpoint after confirming the visual-editor fallback.
