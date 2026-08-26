@@ -51,6 +51,7 @@
 - [x] Deploy the current GitHub main revision to Vercel and verify the public URL.
 - [x] Create the Vercel Git project and verify its resolved build and runtime configuration.
 - [ ] Add the Vercel hostname to reCAPTCHA, then verify the checkbox on the external booking page.
+- [ ] Replace the redirected Vercel alias in canonical and crawler configuration with the actual production hostname `shireeshavision.vercel.app`.
 - [x] Add and verify the Vercel single-page-app fallback required for the public booking route.
 - [x] Audit the deployed Vercel site for indexability, routes, metadata, crawler directives, accessibility semantics, and mobile issues.
 - [x] Add factual page metadata, canonical URLs, social metadata, robots directives, favicon metadata, and crawlers’ public endpoints.

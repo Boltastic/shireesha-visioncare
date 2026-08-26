@@ -7,7 +7,7 @@ describe("SEO metadata configuration", () => {
     expect(new Set(titles).size).toBe(sitemapPaths.length);
     sitemapPaths.forEach(path => {
       expect(getPageMeta(path).indexable).toBe(true);
-      expect(canonicalUrl(path)).toMatch(/^https:\/\/shireesha-vision-care\.vercel\.app\//);
+      expect(canonicalUrl(path)).toMatch(/^https:\/\/shireeshavision\.vercel\.app\//);
     });
   });
 

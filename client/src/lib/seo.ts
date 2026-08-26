@@ -1,4 +1,4 @@
-export const SITE_URL = "https://shireesha-vision-care.vercel.app";
+export const SITE_URL = "https://shireeshavision.vercel.app";
 export const SITE_NAME = "Shireesha 6/6 Vision Care Centre";
 
 export type PageMeta = {

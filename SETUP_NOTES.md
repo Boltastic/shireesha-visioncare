@@ -25,7 +25,7 @@ After Google applies the hostname change, reload the booking page and advance to
 
 ## External Vercel deployment
 
-The Vercel configuration publishes the Vite frontend and proxies its `/api/*` requests to the existing live Manus backend. This preserves the database, appointment safeguards, secure staff session, and server-only secrets without copying them to another host. The linked Vercel project uses `shireesha-vision-care.vercel.app`; its first production build is triggered by a push to the GitHub `main` branch. Add the Vercel deployment hostname to the Google reCAPTCHA key's allowed-domain list before testing the booking checkbox on that external URL.
+The Vercel configuration publishes the Vite frontend and proxies its `/api/*` requests to the existing live Manus backend. This preserves the database, appointment safeguards, secure staff session, and server-only secrets without copying them to another host. The project’s production hostname is `shireeshavision.vercel.app`; `shireesha-vision-care.vercel.app` redirects there. Add the production hostname to the Google reCAPTCHA key's allowed-domain list before testing the booking checkbox on that external URL.
 
 ## Before launch
 
