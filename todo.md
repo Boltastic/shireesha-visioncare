@@ -21,3 +21,10 @@
 - [x] Save a new checkpoint after confirming the visual-editor fallback.
 - [x] Ensure all primary booking action-button labels and icons render in white with reliable contrast.
 - [x] Verify all booking action-button states and save a checkpoint for the contrast correction.
+- [x] Store the supplied administrator email and password as secure project secrets.
+- [x] Implement server-side email-and-password verification with rate limiting and an HttpOnly admin session.
+- [x] Add a professional email-and-password admin sign-in screen and restrict dashboard data to the verified session.
+- [x] Test valid, invalid, and rate-limited admin password login flows.
+- [x] Verify the secure admin login experience and save a checkpoint.
+- [x] Remove all SMS code request, verification, and phone-challenge steps from the appointment booking flow.
+- [x] Update the booking backend and tests for direct validated appointment confirmation without SMS verification.

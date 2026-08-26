@@ -11,14 +11,17 @@ const db = {
 vi.mock("./db", () => ({ getDb: vi.fn(async () => db) }));
 
 import { appRouter } from "./routers";
+import { ADMIN_SESSION_COOKIE, createAdminSessionToken } from "./adminAuth";
 import type { TrpcContext } from "./_core/context";
 
 describe("administrator appointment actions", () => {
   it("allows an administrator to update an appointment status and emits an audit record", async () => {
+    const token = await createAdminSessionToken("visioncare@beetlewebs.com");
     const ctx: TrpcContext = {
-      user: { id: 3, openId: "admin", name: "Admin", email: "admin@example.com", loginMethod: "manus", role: "admin", createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date() },
-      req: {} as TrpcContext["req"],
+      user: null,
+      req: { headers: { cookie: `${ADMIN_SESSION_COOKIE}=${token}` } } as TrpcContext["req"],
       res: {} as TrpcContext["res"],
+      adminSession: null,
     };
     const result = await appRouter.createCaller(ctx).admin.appointments.updateStatus({ id: 44, status: "cancelled" });
     expect(result).toEqual({ success: true });

@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, asc, count, desc, eq, gte, inArray, like, lt, or, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, gte, inArray, like, lt, or } from "drizzle-orm";
 import { z } from "zod";
 import { appointments, auditLogs, availabilityRules, blockedDates, patients, services, siteSettings } from "../../drizzle/schema";
 import { getDb } from "../db";
@@ -14,9 +14,9 @@ async function dbOrThrow() {
   return db;
 }
 
-async function audit(adminUserId: number, action: string, entityType: string, entityId?: number) {
+async function audit(action: string, entityType: string, entityId?: number) {
   const db = await dbOrThrow();
-  await db.insert(auditLogs).values({ adminUserId, action, entityType, entityId: entityId ?? null });
+  await db.insert(auditLogs).values({ adminUserId: 0, action, entityType, entityId: entityId ?? null });
 }
 
 export const adminRouter = router({
@@ -82,7 +82,7 @@ export const adminRouter = router({
         const patch: { status: typeof input.status; slotKey?: string } = { status: input.status };
         if (input.status === "cancelled") patch.slotKey = `released-${input.id}-${Date.now()}`;
         await db.update(appointments).set(patch).where(eq(appointments.id, input.id));
-        await audit(ctx.user.id, `appointment_${input.status}`, "appointment", input.id);
+        await audit(`appointment_${input.status}`, "appointment", input.id);
         return { success: true };
       }),
     reschedule: adminProcedure
@@ -106,7 +106,7 @@ export const adminRouter = router({
           throw new TRPCError({ code: "CONFLICT", message: "This appointment slot was just taken. Please choose another time." });
         }
         await db.update(appointments).set({ startTime, endTime, slotKey, status: "confirmed" }).where(eq(appointments.id, appointment.id));
-        await audit(ctx.user.id, "appointment_rescheduled", "appointment", appointment.id);
+        await audit("appointment_rescheduled", "appointment", appointment.id);
         return { success: true };
       }),
   }),
@@ -142,7 +142,7 @@ export const adminRouter = router({
       .mutation(async ({ ctx, input }) => {
         const db = await dbOrThrow();
         const result = await db.insert(services).values({ name: input.name, description: input.description || null, durationMinutes: input.durationMinutes, active: true });
-        await audit(ctx.user.id, "service_created", "service", Number(result[0].insertId));
+        await audit("service_created", "service", Number(result[0].insertId));
         return { success: true };
       }),
     toggle: adminProcedure
@@ -150,7 +150,7 @@ export const adminRouter = router({
       .mutation(async ({ ctx, input }) => {
         const db = await dbOrThrow();
         await db.update(services).set({ active: input.active }).where(eq(services.id, input.id));
-        await audit(ctx.user.id, "service_updated", "service", input.id);
+        await audit("service_updated", "service", input.id);
         return { success: true };
       }),
   }),
@@ -165,7 +165,7 @@ export const adminRouter = router({
       .mutation(async ({ ctx, input }) => {
         const db = await dbOrThrow();
         await db.insert(siteSettings).values({ key: input.key, value: input.value }).onDuplicateKeyUpdate({ set: { value: input.value } });
-        await audit(ctx.user.id, "setting_updated", "setting");
+        await audit("setting_updated", "setting");
         return { success: true };
       }),
   }),
@@ -185,7 +185,7 @@ export const adminRouter = router({
         const [existing] = await db.select().from(availabilityRules).where(eq(availabilityRules.dayOfWeek, input.dayOfWeek)).limit(1);
         if (existing) await db.update(availabilityRules).set(input).where(eq(availabilityRules.id, existing.id));
         else await db.insert(availabilityRules).values(input);
-        await audit(ctx.user.id, "availability_updated", "availability");
+        await audit("availability_updated", "availability");
         return { success: true };
       }),
   }),

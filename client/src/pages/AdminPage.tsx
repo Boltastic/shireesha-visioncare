@@ -1,7 +1,7 @@
-import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/_core/hooks/useAuth";
+import AdminLogin from "@/components/AdminLogin";
+import DashboardLayout from "@/components/DashboardLayout";
 import { trpc } from "@/lib/trpc";
 import { CalendarDays, Check, ChevronRight, ClipboardList, Clock3, ExternalLink, Loader2, Search, Settings2, UsersRound } from "lucide-react";
 import { useState } from "react";
@@ -67,11 +67,16 @@ function EmptyState({ title, body }: { title: string; body: string }) { return <
 function AdminLoading() { return <div className="admin-loading"><Loader2 className="spin" /> Loading</div>; }
 
 export default function AdminPage() {
-  const { user, loading } = useAuth(); const [location] = useLocation();
+  const session = trpc.adminAuth.session.useQuery();
+  const utils = trpc.useUtils();
+  const logout = trpc.adminAuth.logout.useMutation({ onSuccess: () => utils.adminAuth.session.invalidate() });
+  const [location] = useLocation();
+  if (session.isLoading) return <AdminLoading />;
+  if (!session.data?.authenticated || !session.data.email) return <AdminLogin />;
   let content = <Overview />;
   if (location.includes("appointments")) content = <Appointments />;
   if (location.includes("patients")) content = <Patients />;
   if (location.includes("services")) content = <Services />;
   if (location.includes("settings")) content = <Settings />;
-  return <DashboardLayout>{loading ? <AdminLoading /> : user && user.role !== "admin" ? <div className="admin-denied"><p className="eyebrow">RESTRICTED AREA</p><h1>Staff access<br /><em>required.</em></h1><p>Your account is signed in but is not assigned to the centre’s staff role. Ask the centre owner to add your account before accessing appointment information.</p></div> : content}</DashboardLayout>;
+  return <DashboardLayout email={session.data.email} onLogout={() => logout.mutate()}>{content}</DashboardLayout>;
 }

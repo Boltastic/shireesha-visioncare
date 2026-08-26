@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { trpc } from "@/lib/trpc";
-import { Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, Loader2, MoveUpRight, ShieldCheck, Sparkles } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, Loader2, MoveUpRight, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
 
@@ -42,32 +42,19 @@ export default function BookingFlow() {
   const [phone, setPhone] = useState("");
   const [reason, setReason] = useState("");
   const [captchaComplete, setCaptchaComplete] = useState(false);
-  const [challengeId, setChallengeId] = useState<number>();
-  const [code, setCode] = useState("");
-  const [verificationToken, setVerificationToken] = useState<string>();
   const [confirmation, setConfirmation] = useState<Confirmation>();
   const [error, setError] = useState<string>();
   const servicesQuery = trpc.booking.services.useQuery();
   const slotsQuery = trpc.booking.availableSlots.useQuery({ date: date ?? "", serviceId: serviceId ?? 0 }, { enabled: Boolean(date && serviceId) });
-  const requestOtp = trpc.booking.requestOtp.useMutation({
-    onSuccess: result => { setChallengeId(result.challengeId); setStep(5); setError(undefined); },
-    onError: err => setError(err.message),
-  });
-  const verifyOtp = trpc.booking.verifyOtp.useMutation({
-    onSuccess: result => { setVerificationToken(result.verificationToken); setStep(6); setError(undefined); },
-    onError: err => setError(err.message),
-  });
   const createBooking = trpc.booking.create.useMutation({
-    onSuccess: result => { setConfirmation(result); setStep(7); setError(undefined); },
+    onSuccess: result => { setConfirmation(result); setStep(6); setError(undefined); },
     onError: err => setError(err.message),
   });
   const service = servicesQuery.data?.find(item => item.id === serviceId);
   const canContinue = [Boolean(serviceId), Boolean(date), Boolean(time), fullName.trim().length > 1 && phone.trim().length > 7 && captchaComplete].at(step - 1);
 
-  const goNext = () => { setError(undefined); if (canContinue) setStep(current => Math.min(current + 1, 6)); };
-  const requestCode = () => serviceId && date && time && requestOtp.mutate({ phone, captchaToken: captchaComplete ? "development-pass" : "", serviceId, date, time });
-  const confirmCode = () => challengeId && verifyOtp.mutate({ phone, challengeId, code });
-  const confirmBooking = () => challengeId && verificationToken && serviceId && date && time && createBooking.mutate({ fullName, phone, reason: reason || undefined, serviceId, date, time, challengeId, verificationToken });
+  const goNext = () => { setError(undefined); if (canContinue) setStep(current => Math.min(current + 1, 5)); };
+  const confirmBooking = () => serviceId && date && time && createBooking.mutate({ fullName, phone, reason: reason || undefined, serviceId, date, time, captchaToken: captchaComplete ? "development-pass" : "" });
 
   if (confirmation) return <section className="booking-confirmation" aria-live="polite">
     <div className="confirmation-seal"><Check size={27} strokeWidth={2.5} /></div>
@@ -89,14 +76,14 @@ export default function BookingFlow() {
     <aside className="booking-aside">
       <p className="eyebrow">YOUR APPOINTMENT</p>
       <h1>Simple steps.<br /><em>Clear care.</em></h1>
-      <p>Choose a time that suits you. Your phone number is verified before any appointment is confirmed.</p>
+      <p>Choose a time that suits you. We complete a final availability check before confirming your appointment.</p>
       <ol className="booking-progress" aria-label="Booking progress">
-        {["Service", "Date", "Time", "Your details", "Verify", "Confirm"].map((label, index) => <li key={label} className={step > index + 1 ? "done" : step === index + 1 ? "current" : ""}><span>{step > index + 1 ? <Check size={13} /> : `0${index + 1}`}</span>{label}</li>)}
+        {["Service", "Date", "Time", "Your details", "Confirm"].map((label, index) => <li key={label} className={step > index + 1 ? "done" : step === index + 1 ? "current" : ""}><span>{step > index + 1 ? <Check size={13} /> : `0${index + 1}`}</span>{label}</li>)}
       </ol>
       <div className="privacy-note"><ShieldCheck size={18} /><span><strong>Private by design.</strong> Your booking details are only visible to authorised centre staff.</span></div>
     </aside>
     <section className="booking-panel" aria-labelledby="booking-title">
-      <div className="step-heading"><span>Step {Math.min(step, 6)} of 6</span><div className="progress-line"><i style={{ width: `${Math.min(step, 6) / 6 * 100}%` }} /></div></div>
+      <div className="step-heading"><span>Step {Math.min(step, 5)} of 5</span><div className="progress-line"><i style={{ width: `${Math.min(step, 5) / 5 * 100}%` }} /></div></div>
       {error && <div className="form-error" role="alert"><CircleAlert size={18} />{error}</div>}
       {step === 1 && <div className="booking-step">
         <p className="eyebrow">01 — SELECT SERVICE</p><h2 id="booking-title">What would you like to book?</h2><p className="step-copy">The centre’s approved appointment services appear here.</p>
@@ -115,21 +102,15 @@ export default function BookingFlow() {
         <div className="form-grid"><div><Label htmlFor="fullName">Full name</Label><Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Your full name" autoComplete="name" /></div><div><Label htmlFor="phone">Mobile number</Label><Input id="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+91 98765 43210" autoComplete="tel" inputMode="tel" /></div><div className="full-span"><Label htmlFor="reason">Reason for visit <span>Optional</span></Label><Textarea id="reason" value={reason} onChange={e => setReason(e.target.value)} placeholder="A brief note for the centre, if helpful" rows={3} /></div></div>
         <button type="button" className={captchaComplete ? "captcha-box complete" : "captcha-box"} onClick={() => setCaptchaComplete(true)} aria-pressed={captchaComplete}><span>{captchaComplete ? <Check size={16} /> : null}</span><b>{captchaComplete ? "Security check completed" : "Complete security check"}</b><small>reCAPTCHA will be enabled with the centre’s production key.</small></button>
       </div>}
-      {step === 5 && <div className="booking-step otp-step">
-        <p className="eyebrow">05 — VERIFY YOUR NUMBER</p><h2>Enter your SMS code.</h2><p className="step-copy">A six-digit code has been sent to <strong>{phone}</strong>.</p>
-        {import.meta.env.DEV && <div className="dev-notice"><Sparkles size={16} /><span><b>Preview mode</b> — use code <strong>246810</strong>. Live SMS is activated when the centre adds its verified SMS provider credentials.</span></div>}
-        <div className="otp-input"><Label htmlFor="otpCode">Verification code</Label><Input id="otpCode" value={code} onChange={e => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))} placeholder="000000" inputMode="numeric" autoComplete="one-time-code" /></div>
-      </div>}
-      {step === 6 && <div className="booking-step">
-        <p className="eyebrow">06 — CONFIRM</p><h2>Review your appointment.</h2><p className="step-copy">We’ll do one final availability check before confirming your booking.</p>
+      {step === 5 && <div className="booking-step">
+        <p className="eyebrow">05 — CONFIRM</p><h2>Review your appointment.</h2><p className="step-copy">We’ll do one final availability check before confirming your booking.</p>
         <div className="booking-review"><div><span>Service</span><b>{service?.name}</b></div><div><span>Date</span><b>{date && dateLabel(date)}</b></div><div><span>Time</span><b>{time && formatTime(time)}</b></div><div><span>Patient</span><b>{fullName}</b></div><div><span>Phone</span><b>{phone}</b></div></div>
       </div>}
       <div className="booking-actions">
-        {step > 1 && step < 7 && <Button variant="ghost" onClick={() => { setError(undefined); setStep(step - 1); }} disabled={requestOtp.isPending || verifyOtp.isPending || createBooking.isPending}>Back</Button>}
+        {step > 1 && step < 6 && <Button variant="ghost" onClick={() => { setError(undefined); setStep(step - 1); }} disabled={createBooking.isPending}>Back</Button>}
         {step < 4 && <Button onClick={goNext} disabled={!canContinue}>Continue <MoveUpRight size={16} /></Button>}
-        {step === 4 && <Button onClick={requestCode} disabled={!canContinue || requestOtp.isPending}>{requestOtp.isPending ? <><Loader2 className="spin" />Sending code</> : <>Send verification code <MoveUpRight size={16} /></>}</Button>}
-        {step === 5 && <Button onClick={confirmCode} disabled={code.length !== 6 || verifyOtp.isPending}>{verifyOtp.isPending ? <><Loader2 className="spin" />Checking</> : <>Verify number <ShieldCheck size={16} /></>}</Button>}
-        {step === 6 && <Button onClick={confirmBooking} disabled={createBooking.isPending}>{createBooking.isPending ? <><Loader2 className="spin" />Confirming</> : <>Confirm appointment <Check size={16} /></>}</Button>}
+        {step === 4 && <Button onClick={goNext} disabled={!canContinue}>Review appointment <MoveUpRight size={16} /></Button>}
+        {step === 5 && <Button onClick={confirmBooking} disabled={createBooking.isPending}>{createBooking.isPending ? <><Loader2 className="spin" />Confirming</> : <>Confirm appointment <Check size={16} /></>}</Button>}
       </div>
     </section>
   </div>;

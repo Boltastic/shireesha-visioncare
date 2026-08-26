@@ -18,6 +18,7 @@ describe("admin role protection", () => {
       },
       req: {} as TrpcContext["req"],
       res: {} as TrpcContext["res"],
+      adminSession: null,
     };
 
     const caller = appRouter.createCaller(ctx);

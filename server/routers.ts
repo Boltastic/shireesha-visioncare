@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { adminRouter } from "./routers/admin";
+import { adminAuthRouter } from "./routers/adminAuth";
 import { bookingRouter } from "./routers/booking";
 
 export const appRouter = router({
@@ -19,6 +20,7 @@ export const appRouter = router({
     }),
   }),
   booking: bookingRouter,
+  adminAuth: adminAuthRouter,
   admin: adminRouter,
 });
 
