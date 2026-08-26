@@ -5,6 +5,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { NotificationProvider } from "./contexts/NotificationContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import PageMeta from "./components/PageMeta";
 import AdminPage from "./pages/AdminPage";
 import BookPage from "./pages/BookPage";
 import { AboutPage, ContactPage, HomePage, ServicesPage } from "./pages/PublicPages";
@@ -14,5 +15,5 @@ function Router() {
 }
 
 export default function App() {
-  return <ErrorBoundary><ThemeProvider defaultTheme="light"><LanguageProvider><TooltipProvider><NotificationProvider><Router /></NotificationProvider></TooltipProvider></LanguageProvider></ThemeProvider></ErrorBoundary>;
+  return <ErrorBoundary><ThemeProvider defaultTheme="light"><LanguageProvider><PageMeta /><TooltipProvider><NotificationProvider><Router /></NotificationProvider></TooltipProvider></LanguageProvider></ThemeProvider></ErrorBoundary>;
 }

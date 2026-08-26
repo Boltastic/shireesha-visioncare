@@ -9,6 +9,10 @@
       "destination": "https://shireesha6-e25sczv4.manus.space/api/:path*"
     },
     {
+      "source": "/manus-storage/:path*",
+      "destination": "https://shireesha6-e25sczv4.manus.space/manus-storage/:path*"
+    },
+    {
       "source": "/:path*",
       "destination": "/index.html"
     }
