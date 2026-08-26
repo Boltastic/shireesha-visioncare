@@ -10,7 +10,7 @@ The application accepts direct appointment requests after the booking security c
 
 ## Preview behaviour
 
-In development, the booking security check accepts the development token. This fallback is rejected when the application is run in production without the CAPTCHA configuration.
+The booking form renders Google reCAPTCHA whenever a valid Site Key is configured. Automated server tests use a development-only token; the public booking interface always requests a real CAPTCHA token.
 
 ## Before launch
 

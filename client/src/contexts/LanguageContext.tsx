@@ -1,0 +1,25 @@
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+
+type Locale = "en" | "te";
+
+export const translationCopy: Record<Locale, Record<string, string>> = {
+  en: {
+    "nav.home": "Home", "nav.services": "Services", "nav.about": "About", "nav.contact": "Contact", "nav.book": "Book appointment", "footer.tagline": "Care, clearly considered.", "footer.note": "A focused appointment experience for Shireesha 6/6 Vision Care Centre.",
+    "booking.eyebrow": "YOUR APPOINTMENT", "booking.headline": "Simple steps. Clear care.", "booking.intro": "Choose a time that suits you. We complete a final availability check before confirming your appointment.", "booking.service": "Service", "booking.date": "Date", "booking.time": "Time", "booking.details": "Your details", "booking.confirm": "Confirm", "booking.continue": "Continue", "booking.back": "Back", "booking.review": "Review appointment", "booking.confirmAppointment": "Confirm appointment", "booking.stepService": "What would you like to book?", "booking.stepDate": "When would you prefer to visit?", "booking.stepTime": "Pick a time that works for you.", "booking.stepDetails": "Tell us just what we need.", "booking.stepConfirm": "Review your appointment.", "booking.fullName": "Full name", "booking.phone": "Mobile number", "booking.reason": "Reason for visit", "booking.optional": "Optional", "booking.private": "Private by design.", "booking.privateBody": "Your booking details are only visible to authorised centre staff.", "booking.step": "Step", "booking.of": "of", "booking.serviceCopy": "The centre’s approved appointment services appear here.", "booking.dateCopy": "Available dates are shown in the centre’s local timezone.", "booking.selectDate": "Select a date to see times.", "booking.detailsCopy": "We do not request an email address or medical history to make an appointment.", "booking.reasonPlaceholder": "A brief note for the centre, if helpful", "booking.securityLoading": "Loading booking security", "booking.protected": "Protected by Google reCAPTCHA.", "booking.confirmCopy": "We’ll do one final availability check before confirming your booking.", "booking.patient": "Patient", "booking.status": "Status",
+  },
+  te: {
+    "nav.home": "హోమ్", "nav.services": "సేవలు", "nav.about": "మా గురించి", "nav.contact": "సంప్రదించండి", "nav.book": "అపాయింట్‌మెంట్ బుక్ చేయండి", "footer.tagline": "స్పష్టంగా ఆలోచించిన సంరక్షణ.", "footer.note": "శిరీష 6/6 విజన్ కేర్ సెంటర్ కోసం సులభమైన అపాయింట్‌మెంట్ అనుభవం.",
+    "booking.eyebrow": "మీ అపాయింట్‌మెంట్", "booking.headline": "సులభమైన దశలు. స్పష్టమైన సంరక్షణ.", "booking.intro": "మీకు అనుకూలమైన సమయాన్ని ఎంచుకోండి. నిర్ధారించే ముందు మేము తుది లభ్యత తనిఖీ చేస్తాము.", "booking.service": "సేవ", "booking.date": "తేదీ", "booking.time": "సమయం", "booking.details": "మీ వివరాలు", "booking.confirm": "నిర్ధారించండి", "booking.continue": "కొనసాగించండి", "booking.back": "వెనుకకు", "booking.review": "అపాయింట్‌మెంట్ పరిశీలించండి", "booking.confirmAppointment": "అపాయింట్‌మెంట్ నిర్ధారించండి", "booking.stepService": "మీరు ఏ సేవను బుక్ చేయాలనుకుంటున్నారు?", "booking.stepDate": "మీరు ఎప్పుడు రావాలనుకుంటున్నారు?", "booking.stepTime": "మీకు అనుకూలమైన సమయాన్ని ఎంచుకోండి.", "booking.stepDetails": "మాకు అవసరమైన వివరాలు మాత్రమే తెలియజేయండి.", "booking.stepConfirm": "మీ అపాయింట్‌మెంట్‌ను పరిశీలించండి.", "booking.fullName": "పూర్తి పేరు", "booking.phone": "మొబైల్ నంబర్", "booking.reason": "సందర్శన కారణం", "booking.optional": "ఐచ్ఛికం", "booking.private": "గోప్యతకు ప్రాధాన్యం.", "booking.privateBody": "మీ బుకింగ్ వివరాలు అధికృత కేంద్ర సిబ్బందికి మాత్రమే కనిపిస్తాయి.", "booking.step": "దశ", "booking.of": "లో", "booking.serviceCopy": "కేంద్రం ఆమోదించిన అపాయింట్‌మెంట్ సేవలు ఇక్కడ కనిపిస్తాయి.", "booking.dateCopy": "కేంద్రం స్థానిక సమయ మండలిలో అందుబాటులో ఉన్న తేదీలు చూపబడతాయి.", "booking.selectDate": "సమయాలను చూడటానికి తేదీని ఎంచుకోండి.", "booking.detailsCopy": "అపాయింట్‌మెంట్ కోసం మేము ఇమెయిల్ చిరునామా లేదా వైద్య చరిత్రను అడగము.", "booking.reasonPlaceholder": "ఉపయోగకరమైతే కేంద్రం కోసం చిన్న గమనిక", "booking.securityLoading": "బుకింగ్ భద్రత లోడ్ అవుతోంది", "booking.protected": "Google reCAPTCHA ద్వారా రక్షించబడింది.", "booking.confirmCopy": "మీ బుకింగ్ నిర్ధారించే ముందు మేము తుది లభ్యత తనిఖీ చేస్తాము.", "booking.patient": "రోగి", "booking.status": "స్థితి",
+  },
+};
+
+const LanguageContext = createContext<{ locale: Locale; setLocale: (locale: Locale) => void; t: (key: string) => string }>({ locale: "en", setLocale: () => undefined, t: key => key });
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [locale, setLocale] = useState<Locale>(() => localStorage.getItem("shireesha-language") === "te" ? "te" : "en");
+  useEffect(() => { localStorage.setItem("shireesha-language", locale); document.documentElement.lang = locale === "te" ? "te" : "en"; }, [locale]);
+  const value = useMemo(() => ({ locale, setLocale, t: (key: string) => translationCopy[locale][key] ?? translationCopy.en[key] ?? key }), [locale]);
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+}
+
+export function useLanguage() { return useContext(LanguageContext); }

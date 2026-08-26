@@ -28,3 +28,14 @@
 - [x] Verify the secure admin login experience and save a checkpoint.
 - [x] Remove all SMS code request, verification, and phone-challenge steps from the appointment booking flow.
 - [x] Update the booking backend and tests for direct validated appointment confirmation without SMS verification.
+- [x] Provide production CAPTCHA key configuration steps and securely collect the server-side secret when available.
+- [x] Keep appointment service names, descriptions, and durations admin-managed rather than hardcoding final catalogue content.
+- [x] Verify the public service picker reflects active services created from the admin dashboard.
+- [x] Configure the supplied reCAPTCHA public Site Key in the booking interface and collect the production server Secret Key securely.
+- [x] Verify the real production CAPTCHA widget and token submission in a production-like build.
+- [x] Define and implement a branded in-site notification experience for booking and staff actions.
+- [x] Verify notification behaviour and save a checkpoint.
+- [x] Keep the admin dashboard as the source of truth for creating appointment services.
+- [x] Remove the temporary public booking-unavailable block while retaining applicable booking validation safeguards.
+- [x] Add an accessible English–Telugu language switcher for the public website and booking flow.
+- [x] Verify booking availability and language switching, then save a checkpoint.

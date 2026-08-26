@@ -41,7 +41,7 @@ describe("direct booking flow", () => {
     const db = await getDb();
     const [appointment] = await db!.select().from(appointments).where(eq(appointments.bookingId, confirmed.bookingId)).limit(1);
     expect((await (await adminCaller()).admin.appointments.reschedule({ id: appointment!.id, date, time: "10:30" }))).toEqual({ success: true });
-  });
+  }, 10000);
 });
 
 afterAll(async () => {

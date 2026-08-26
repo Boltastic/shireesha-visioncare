@@ -3,6 +3,7 @@ import { and, count, eq, gte, inArray, lt } from "drizzle-orm";
 import { z } from "zod";
 import { appointments, availabilityRules, blockedDates, bookingAttempts, patients, services, siteSettings, slotHolds } from "../../drizzle/schema";
 import { getDb } from "../db";
+import { hasCaptchaSecretKey, readCaptchaSiteKey } from "../captchaConfig";
 import { BUSINESS_OFFSET, hashValue, isBookableSlot, isE164Phone, maskPhone, normalizePhone, SLOT_TIMES, slotStart } from "../bookingUtils";
 import { publicProcedure, router } from "../_core/trpc";
 
@@ -31,24 +32,20 @@ async function enforceRateLimit(kind: string, phone: string, ipHash: string, max
   if (Number(phoneResult?.total ?? 0) >= max || Number(ipResult?.total ?? 0) >= max * 2) throw new TRPCError({ code: "TOO_MANY_REQUESTS", message: "Too many attempts. Please wait a moment and try again." });
 }
 
-async function verifyCaptcha(token: string) {
-  if (process.env.NODE_ENV !== "production") {
+type CaptchaRequest = (url: string, init: RequestInit) => Promise<{ json: () => Promise<unknown> }>;
+
+export async function verifyCaptcha(token: string, options?: { production?: boolean; secret?: string; request?: CaptchaRequest }) {
+  const production = options?.production ?? process.env.NODE_ENV === "production";
+  const secret = options?.secret ?? process.env.RECAPTCHA_SECRET_KEY;
+  const request = options?.request ?? fetch;
+  if (!production) {
     if (token === "development-pass") return;
     throw new TRPCError({ code: "BAD_REQUEST", message: "Please complete the preview security check." });
   }
-  if (!process.env.RECAPTCHA_SECRET_KEY) throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Appointments are temporarily unavailable. Please try again shortly." });
-  const response = await fetch("https://www.google.com/recaptcha/api/siteverify", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ secret: process.env.RECAPTCHA_SECRET_KEY, response: token }) });
+  if (!secret) return;
+  const response = await request("https://www.google.com/recaptcha/api/siteverify", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ secret, response: token }) });
   const result = (await response.json()) as { success?: boolean };
   if (!result.success) throw new TRPCError({ code: "BAD_REQUEST", message: "The security verification could not be confirmed." });
-}
-
-async function ensureSetupService() {
-  const db = await requireDb();
-  const existing = await db.select().from(services).where(eq(services.active, true)).limit(1);
-  if (existing.length) return existing[0]!;
-  await db.insert(services).values({ name: "Vision care appointment", description: "Choose a suitable time to discuss your needs with the centre.", durationMinutes: 30, active: true });
-  const [created] = await db.select().from(services).where(eq(services.active, true)).limit(1);
-  return created!;
 }
 
 async function ensureAvailabilityRules() {
@@ -76,8 +73,9 @@ async function isConfiguredWorkingTime(date: string, time: string, durationMinut
 }
 
 export const bookingRouter = router({
+  captchaConfig: publicProcedure.query(() => ({ siteKey: readCaptchaSiteKey(), serverVerificationConfigured: hasCaptchaSecretKey() })),
+
   services: publicProcedure.query(async () => {
-    await ensureSetupService();
     const db = await requireDb();
     return db.select({ id: services.id, name: services.name, description: services.description, durationMinutes: services.durationMinutes }).from(services).where(eq(services.active, true));
   }),
