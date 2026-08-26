@@ -38,10 +38,10 @@ export async function verifyCaptcha(token: string, options?: { production?: bool
   const production = options?.production ?? process.env.NODE_ENV === "production";
   const secret = options?.secret ?? process.env.RECAPTCHA_SECRET_KEY;
   const request = options?.request ?? fetch;
-  if (!production) {
-    if (token === "development-pass") return;
-    throw new TRPCError({ code: "BAD_REQUEST", message: "Please complete the preview security check." });
-  }
+  // Keep the test-only pass available in non-production environments, but verify
+  // every real browser token whenever a server secret has been configured. This
+  // lets the managed preview use the same real checkbox journey as production.
+  if (!production && token === "development-pass") return;
   if (!secret) return;
   const response = await request("https://www.google.com/recaptcha/api/siteverify", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ secret, response: token }) });
   const result = (await response.json()) as { success?: boolean };

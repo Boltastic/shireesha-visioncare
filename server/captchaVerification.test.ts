@@ -13,6 +13,16 @@ describe("production CAPTCHA verification", () => {
     expect(requests[0]?.body.get("response")).toBe("valid-token");
   });
 
+  it("verifies a completed real token in preview whenever a server secret is configured", async () => {
+    const requests: Array<{ url: string; body: URLSearchParams }> = [];
+    await expect(verifyCaptcha("preview-browser-token", { production: false, secret: "server-secret", request: async (url, init) => {
+      requests.push({ url, body: init.body as URLSearchParams });
+      return { json: async () => ({ success: true }) };
+    } })).resolves.toBeUndefined();
+    expect(requests).toHaveLength(1);
+    expect(requests[0]?.body.get("response")).toBe("preview-browser-token");
+  });
+
   it("rejects invalid provider responses while keeping bookings available when server verification is not configured", async () => {
     await expect(verifyCaptcha("invalid-token", { production: true, secret: "server-secret", request: async () => ({ json: async () => ({ success: false }) }) })).rejects.toMatchObject({ code: "BAD_REQUEST" });
     await expect(verifyCaptcha("valid-token", { production: true, secret: "" })).resolves.toBeUndefined();
