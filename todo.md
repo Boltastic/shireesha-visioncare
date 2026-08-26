@@ -15,3 +15,5 @@
 - [x] Add integration-level tests for request, verification, booking confirmation, and rescheduling paths.
 - [x] Confirm a clean post-restart log window after exercising the verified booking and staff routes.
 - [x] Save a completed project checkpoint after documenting production SMS, CAPTCHA, and calendar setup.
+- [x] Verify the user-applied white booking-button label and icon contrast change across the booking screen.
+- [x] Save a refreshed checkpoint for the verified booking-button visual edit.

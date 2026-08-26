@@ -126,7 +126,7 @@ export default function BookingFlow() {
       </div>}
       <div className="booking-actions">
         {step > 1 && step < 7 && <Button variant="ghost" onClick={() => { setError(undefined); setStep(step - 1); }} disabled={requestOtp.isPending || verifyOtp.isPending || createBooking.isPending}>Back</Button>}
-        {step < 4 && <Button onClick={goNext} disabled={!canContinue}>Continue <MoveUpRight size={16} /></Button>}
+        {step < 4 && <Button onClick={goNext} disabled={!canContinue} style={{color: '#ffffff'}}>Continue <MoveUpRight size={16} style={{color: '#ffffff'}} /></Button>}
         {step === 4 && <Button onClick={requestCode} disabled={!canContinue || requestOtp.isPending}>{requestOtp.isPending ? <><Loader2 className="spin" />Sending code</> : <>Send verification code <MoveUpRight size={16} /></>}</Button>}
         {step === 5 && <Button onClick={confirmCode} disabled={code.length !== 6 || verifyOtp.isPending}>{verifyOtp.isPending ? <><Loader2 className="spin" />Checking</> : <>Verify number <ShieldCheck size={16} /></>}</Button>}
         {step === 6 && <Button onClick={confirmBooking} disabled={createBooking.isPending}>{createBooking.isPending ? <><Loader2 className="spin" />Confirming</> : <>Confirm appointment <Check size={16} /></>}</Button>}
