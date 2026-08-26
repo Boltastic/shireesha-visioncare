@@ -39,3 +39,9 @@
 - [x] Remove the temporary public booking-unavailable block while retaining applicable booking validation safeguards.
 - [x] Add an accessible English–Telugu language switcher for the public website and booking flow.
 - [x] Verify booking availability and language switching, then save a checkpoint.
+- [x] Restart the unresponsive development server and confirm the preview is reachable.
+- [x] Replace the booking CAPTCHA Site Key and Secret Key with the user-supplied production pair.
+- [x] Verify the reCAPTCHA widget renders and the protected server configuration is available.
+- [ ] Save a checkpoint after CAPTCHA visibility is restored.
+- [x] Add the preview and production hostnames to the new reCAPTCHA key's allowed-domain list, then verify a working checkbox.
+- [ ] Confirm the published checkpoint version is recorded after GitHub synchronization.
