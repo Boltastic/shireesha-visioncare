@@ -51,6 +51,7 @@
 - [ ] Deploy the current GitHub main revision to Vercel and verify the public URL.
 - [ ] Create the Vercel Git project and verify its resolved build and runtime configuration.
 - [ ] Add the Vercel hostname to reCAPTCHA and verify the externally deployed API proxy works.
+- [ ] Add and verify the Vercel single-page-app fallback required for the public booking route.
 - [x] Diagnose why a completed reCAPTCHA challenge returns “Booking could not be confirmed.”
 - [x] Correct the preview-only CAPTCHA rejection in the booking confirmation verifier and add regression coverage.
 - [x] Verify that a completed real reCAPTCHA challenge advances from Details to Review without submitting an appointment.
