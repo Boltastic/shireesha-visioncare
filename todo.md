@@ -42,6 +42,7 @@
 - [x] Restart the unresponsive development server and confirm the preview is reachable.
 - [x] Replace the booking CAPTCHA Site Key and Secret Key with the user-supplied production pair.
 - [x] Verify the reCAPTCHA widget renders and the protected server configuration is available.
-- [ ] Save a checkpoint after CAPTCHA visibility is restored.
+- [x] Save a checkpoint after CAPTCHA visibility is restored.
 - [x] Add the preview and production hostnames to the new reCAPTCHA key's allowed-domain list, then verify a working checkbox.
-- [ ] Confirm the published checkpoint version is recorded after GitHub synchronization.
+- [x] Confirm the published checkpoint version is recorded after GitHub synchronization: `35f2a291`.
+- [x] Verify that the published project revision is present on the connected GitHub main branch.
