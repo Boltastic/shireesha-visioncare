@@ -19,3 +19,5 @@
 - [x] Save a refreshed checkpoint for the verified booking-button visual edit.
 - [x] Confirm the visual-editor comment is already satisfied by the retained white booking-button text and icon styles.
 - [x] Save a new checkpoint after confirming the visual-editor fallback.
+- [x] Ensure all primary booking action-button labels and icons render in white with reliable contrast.
+- [x] Verify all booking action-button states and save a checkpoint for the contrast correction.
