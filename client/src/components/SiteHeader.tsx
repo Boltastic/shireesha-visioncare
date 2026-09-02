@@ -18,8 +18,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="site-header__inner">
         <Link href="/" className="brand" aria-label="Shireesha 6/6 Vision Care Centre home">
-          <span className="brand__name">Shireesha <i>6/6</i></span>
-          <span className="brand__sub">Vision Care Centre</span>
+          <img src="/logo.svg" alt="Shireesha 6/6 Vision Care Centre" className="brand-logo" />
         </Link>
         <nav className="desktop-nav" aria-label="Main navigation">
           {nav.map(item => <Link key={item.path} href={item.path} className={location === item.path ? "is-active" : ""}>{t(item.key)}</Link>)}
